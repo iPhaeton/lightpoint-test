@@ -1,13 +1,13 @@
 (function () {
     //Create a sample list
-    var list = {};
+    var list = new List();
 
     for (var i = 0; i < 10; i++) {
         var shop = new Shop({
             name: "Shop" + (i+1),
             address: "Street: " + (i+1) + ", house: 1",
             hours: "9.00 - 21.00",
-            number: (i+1)
+            //number: (i+1)
         });
 
         for (var j = 0; j < 10; j++) {
@@ -18,10 +18,10 @@
             shop.addCommodity(commodity);
         };
 
-        list[shop.number] = shop;
+        list.add(shop);
     };
 
-    var shopList = new ShopList(null, list);
+    var shopList = new ShopList($(".container"), list);
     shopList.render();
     shopList.setEvents();
 })();

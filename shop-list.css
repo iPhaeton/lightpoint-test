@@ -2,6 +2,38 @@
     cursor: pointer;
 }
 
+.shop-list .navbar {
+    margin: 0;
+}
+
+.list-menu {
+    float: right;
+}
+
+.list-menu a {
+    color: #fff;
+}
+
 .hidden {
     display: none;
+}
+
+.head-menu {
+    background: #333;
+}
+
+.icon-bar {
+    background: #fff;
+}
+
+.panel-title {
+    float: left;
+}
+
+.panel-heading {
+    padding: 0;
+}
+
+.panel-heading h3 {
+    padding: 15px;
 }
