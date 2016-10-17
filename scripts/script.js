@@ -22,4 +22,5 @@
     };
 
     var shopList = new ShopList(null, list);
+    shopList.render();
 })();
