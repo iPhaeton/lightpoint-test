@@ -1,3 +1,7 @@
 .shop-list .panel-heading:hover {
     cursor: pointer;
 }
+
+.hidden {
+    display: none;
+}

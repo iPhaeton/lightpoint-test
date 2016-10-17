@@ -16,4 +16,4 @@ class Shop extends Entity{
         if (!this.commodities) this.commodities = new Set();
         else this.commodities.add(commodity);
     };
-}
+};

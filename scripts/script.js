@@ -1,6 +1,6 @@
 (function () {
     //Create a sample list
-    var list = new Set();
+    var list = {};
 
     for (var i = 0; i < 10; i++) {
         var shop = new Shop({
@@ -18,9 +18,10 @@
             shop.addCommodity(commodity);
         };
 
-        list.add(shop);
+        list[shop.number] = shop;
     };
 
     var shopList = new ShopList(null, list);
     shopList.render();
+    shopList.setEvents();
 })();
