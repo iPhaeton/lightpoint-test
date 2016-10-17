@@ -11,4 +11,9 @@ class Shop extends Entity{
         this.hours = options.hours;
         this.number = options.number;
     };
+
+    addCommodity (commodity) {
+        if (!this.commodities) this.commodities = new Set();
+        else this.commodities.add(commodity);
+    }
 }
