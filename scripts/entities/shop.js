@@ -6,14 +6,13 @@
 
 class Shop extends Entity{
     constructor (options) {
-        super(options.name);
+        super(options.name, options.number);
         this.address = options.address;
         this.hours = options.hours;
-        this.number = options.number;
     };
 
     addCommodity (commodity) {
-        if (!this.commodities) this.commodities = new Set();
-        else this.commodities.add(commodity);
+        if (!this.commodities) this.commodities = new List();
+        this.commodities.add(commodity);
     };
 };

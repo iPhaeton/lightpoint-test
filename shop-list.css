@@ -37,3 +37,11 @@
 .panel-heading h3 {
     padding: 15px;
 }
+
+.commodity-table a {
+	padding-left: 15px;
+}
+
+.commodity-table a:hover {
+	cursor: pointer;
+}

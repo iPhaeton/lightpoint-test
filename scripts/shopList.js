@@ -13,18 +13,7 @@ class ShopList {
 
         this.list = list;
 
-        $("#add-button").on("click", () => {
-
-            var shop = new Shop ({
-                name: "Shop",
-                address: "",
-                hours: ""
-            });
-            this.list.add(shop);
-            var newItem = $(this.listItem(shop));
-            $(".shop-list").append(newItem);
-            this.setEvents();
-        });
+        $("#add-button").on("click", this.add.bind(this));
     };
 
     render () {
@@ -40,52 +29,153 @@ class ShopList {
     };
 
     setEvents () {
-        $(".shop-list a").on("click", (event) => {
-            var target = $(event.target);
-
-            if(target.hasClass("title-button")) return;
-
-            var panel = $(target.data("panel"));
-
-            var table = panel.find(".commodity-table");
-            if (table.length) {
-                table.toggle("hidden");
-            } else {
-                panel.append(this.commodityTable(this.list[panel.attr("id")].commodities));
-            };
-        })
-
-        $(".edit-button").on("click", (event) => {
-            var panel = $($(event.target).data("panel"));
-            if (!panel.parent().hasClass("in")) return;
-
-            var shop = this.list[panel.attr("id")];
-            panel.html(this.editItem(shop));
-
-            $(".shop-edit").on("submit", (event) => {
-                event.preventDefault();
-
-                var form = $(event.target);
-                var item = $(form.data("item"));
-
-                shop.name = $("#name-input").val();
-                shop.address = $("#address-input").val();
-                shop.hours = $("#hours-input").val();
-                var newItem = $(this.listItem(shop));
-
-                item.after(newItem);
-                item.remove();
-            });
-        });
-
-        $(".remove-button").on("click", () => {
-            var button = $(event.target);
-            var item = $(button.data("item"));
-            delete this.list[item.data("shop")];
-            item.remove();
-        });
+		this.unsetEvents();
+		
+        $(".shop-list a").on("click", this.showCommodities.bind(this));
+        $(".edit-button").on("click", this.edit.bind(this));
+        $(".remove-button").on("click", this.remove.bind(this));
     };
+	
+	unsetEvents () {
+		$(".shop-list a").off("click");
+		$(".edit-button").off("click");
+		$(".remove-button").off("click");
+	};
+	
+//Event listeners------------------------------------------------------------------------------------------------------------------------------------	
+	showCommodities (event) {
+		var target = $(event.target);
 
+        if(target.hasClass("title-button")) return;
+
+        var panel = $(target.data("panel"));
+
+        var table = panel.find(".commodity-table");
+        if (table.length) {
+            table.toggle("hidden");
+        } else {
+            panel.append(this.commodityTable(this.list[panel.attr("id")].commodities, panel.attr("id")));
+        };
+
+		$(".edit-com").off("click")
+		$(".edit-com").on("click", this.editCommodity.bind(this));
+		$(".remove-com").off("click");
+		$(".remove-com").on("click", this.removeCommodity.bind(this));
+		$(".add-com").off("click");
+		$(".add-com").on("click", this.addCommodity.bind(this));
+	};
+	
+	add () {
+		var shop = new Shop ({
+                name: "Shop",
+                address: "",
+                hours: ""
+            });
+        this.list.add(shop);
+        var newItem = $(this.listItem(shop));
+		//newItem.find(".edit-button").click();
+        $(".shop-list").append(newItem);
+        this.setEvents();
+	};
+	
+	remove (event) {
+		var button = $(event.target);
+        var item = $(button.data("item"));
+        delete this.list[item.data("shop")];
+        item.remove();
+	};
+	
+	edit (event) {
+		var panel = $($(event.target).data("panel"));
+        //if (!panel.parent().hasClass("in")) return;
+		panel.parent().collapse("show");
+
+        var shop = this.list[panel.attr("id")];
+        panel.html(this.editItem(shop));
+
+		$(".shop-edit").off("submit");
+        $(".shop-edit").on("submit", {shop: shop}, this.shopSubmit.bind(this));
+	};
+	
+	shopSubmit (event) {
+		event.preventDefault();
+		
+		var shop = event.data.shop;
+
+        var form = $(event.target);
+        var item = $(form.data("item"));
+
+        shop.name = $("#name-input").val();
+        shop.address = $("#address-input").val();
+        shop.hours = $("#hours-input").val();
+        var newItem = $(this.listItem(shop));
+
+        item.after(newItem);
+        item.remove();
+		this.setEvents();
+	};
+	
+	editCommodity (event) {
+		var target = $(event.target);
+		var shop = target.data("shop");
+		var commodity = target.data("com");
+		
+		var row = target.closest("tr");
+		row.html(this.editTable(this.list[shop].commodities[commodity], shop));
+		
+		$(".save-com").off("click");
+		$(".save-com").on("click", this.saveCommodity.bind(this));
+	};
+	
+	saveCommodity (event) {
+		var target = $(event.target);
+		var row = target.closest("tr");
+		var tds = row.find("td");
+		
+		var shop = target.data("shop");
+		var commodity = target.data("com");
+		commodity = this.list[shop].commodities[commodity];
+		
+		tds.each((i, td) => {
+			var input = $(td).find("input");
+			if (!input.length) return;
+			commodity[input.attr("id")] = input.val();
+		});
+		
+		row.html(this.commodityLine(commodity, shop));
+		$(".edit-com").off("click");
+		$(".edit-com").on("click", this.editCommodity.bind(this));
+		$(".remove-com").off("click");
+		$(".remove-com").on("click", this.removeCommodity.bind(this));
+		$(".add-com").off("click");
+		$(".add-com").on("click", this.addCommodity.bind(this));
+	};
+	
+	removeCommodity (event) {
+		var target = $(event.target);
+		var row = target.closest("tr");
+		var shop = target.data("shop");
+		var commodity = target.data("com");
+		delete this.list[shop].commodities[commodity];
+		row.remove();
+	};
+	
+	addCommodity (event) {
+		var target = $(event.target);
+		var nextRow = $(target.closest("tr"));
+		var shop = target.data("shop");
+		var commodity = new Commodity({name: "", description: ""});
+		this.list[shop].commodities.add(commodity);
+		
+		var row = $("<tr></tr>");
+		row.append(this.editTable(commodity, shop));
+		nextRow.before(row);
+		
+		$(".save-com").off("click");
+		$(".save-com").on("click", this.saveCommodity.bind(this));
+	}
+
+//Templates-----------------------------------------------------------------------------------------------------------------------------------------------------------------
     listItem (shop) {
         return `<div class="panel panel-primary" id="item-${shop.number}" data-shop="${shop.number}">
                     <div class="panel-heading">
@@ -95,12 +185,12 @@ class ShopList {
                         <div class="navbar list-menu">
                             <ul class="nav navbar-nav">
                                 <li>
-                                    <a role="presentation" href="#" data-panel="#${shop.number}" class="title-button edit-button">
+                                    <a href="#" data-panel="#${shop.number}" class="title-button edit-button">
                                         Редактировать
                                     </a>
                                 </li>
                                 <li>
-                                    <a role="presentation" href="#" data-item="#item-${shop.number}" class="title-button remove-button">
+                                    <a href="#" data-item="#item-${shop.number}" class="title-button remove-button">
                                         Удалить
                                     </a>
                                 </li>
@@ -119,8 +209,8 @@ class ShopList {
                 </div>`;
     };
 
-    commodityTable (commodities) {
-        var tmpl = _.template(`<table class="table commodity-table">
+    commodityTable (commodities, shopNum) {
+        var tmpl = _.template(`<table class="table commodity-table" id="table-${shopNum}">
             <thead>
                 <tr>
                     <td>
@@ -131,20 +221,38 @@ class ShopList {
                     </td>
                 </tr>
             </thead>
-            <% for (var commodity of commodities) {%>
-                <tr>
-                    <td>
+			<tbody>
+				<% for (var commodity in commodities) {%>
+					<tr>
+						<%=self.commodityLine(commodities[commodity], ${shopNum})%>
+					</tr>
+				<%}%>
+				<tr>
+					<td></td>
+					<td></td>
+					<td>
+						<a class="add-com" data-shop="${shopNum}" data-table="#table-${shopNum}">Добавить товар</a>
+					</td>
+				</tr>
+			</tbody>
+        </table>`);
+
+        return tmpl({commodities: commodities, self: this});
+    };
+	
+	commodityLine (commodity, shopNum) {
+		var tmpl = _.template(`<td>
                         <%=commodity.name%>
                     </td>
                     <td>
                         <%=commodity.description%>
                     </td>
-                </tr>
-            <%}%>
-        </table>`);
-
-        return tmpl({commodities});
-    };
+					<td>
+						<a class="edit-com" data-shop="${shopNum}" data-com="<%=commodity.number%>" data-table="#table-${shopNum}">Редактировать</a>
+						<a class="remove-com" data-shop="${shopNum}" data-com="<%=commodity.number%>" data-table="#table-${shopNum}">Удалить</a>
+					</td>`);
+		return tmpl({commodity: commodity});
+	}
 
     editItem (shop) {
         return `<form class="shop-edit" data-item="#item-${shop.number}" data-shop="${shop.number}">
@@ -164,4 +272,16 @@ class ShopList {
             <button type="submit" class="btn btn-default">Сохранить</button>
         </form>`
     };
+	
+	editTable (commodity, shopNum) {
+		return `<td>
+                    <input id="name" value="${commodity.name}">
+                </td>
+                <td>
+					<input id="description" value="${commodity.description}">
+                </td>
+				<td>
+					<a class="save-com" data-com="${commodity.number}" data-shop="${shopNum}">Сохранить</a>
+				</td>`
+	};
 };
