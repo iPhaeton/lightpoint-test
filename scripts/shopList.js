@@ -26,6 +26,8 @@ class ShopList {
         };
 
         this.elem.append(panel);
+
+        this.mover = new Mover(".panel-heading", ".shop-list-item");
     };
 
     setEvents () {
@@ -177,7 +179,7 @@ class ShopList {
 
 //Templates-----------------------------------------------------------------------------------------------------------------------------------------------------------------
     listItem (shop) {
-        return `<div class="panel panel-primary" id="item-${shop.number}" data-shop="${shop.number}">
+        return `<div class="panel panel-primary shop-list-item" id="item-${shop.number}" data-shop="${shop.number}">
                     <div class="panel-heading">
                         <h3 class="panel-title" data-target="#panel-${shop.number}" data-toggle="collapse" data-parent="#shop-list">
                             ${shop.number}. ${shop.name}
