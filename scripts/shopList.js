@@ -17,6 +17,8 @@ class ShopList {
     };
 
     render () {
+        this.elem.html("");
+
         var panel = $("<div class='panel-group shop-list' id='shop-list'></div>");
 
         for (var shop in this.list) {
@@ -27,7 +29,9 @@ class ShopList {
 
         this.elem.append(panel);
 
-        this.mover = new Mover(".panel-heading", ".shop-list-item");
+        this.mover = new Mover(".panel-heading", ".shop-list-item", this);
+
+        this.setEvents();
     };
 
     setEvents () {
@@ -78,13 +82,15 @@ class ShopList {
 		//newItem.find(".edit-button").click();
         $(".shop-list").append(newItem);
         this.setEvents();
+        this.render();
 	};
 	
 	remove (event) {
 		var button = $(event.target);
         var item = $(button.data("item"));
-        delete this.list[item.data("shop")];
+        this.list.delete(item.data("shop"));
         item.remove();
+        this.render();
 	};
 	
 	edit (event) {
@@ -115,6 +121,7 @@ class ShopList {
         item.after(newItem);
         item.remove();
 		this.setEvents();
+        this.render();
 	};
 	
 	editCommodity (event) {

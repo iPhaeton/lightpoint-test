@@ -20,7 +20,7 @@
         list.add(shop);
     };
 
-    var shopList = new ShopList($(".container"), list);
+    var shopList = new ShopList($("#initial-div-list"), list);
     shopList.render();
     shopList.setEvents();
 })();

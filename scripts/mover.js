@@ -1,7 +1,8 @@
 class Mover {
-    constructor (selectorToCatch, selectorToMove) {
+    constructor (selectorToCatch, selectorToMove, parent) {
         this.selectorElement = $(selectorToCatch);
         this.selectorToMove = selectorToMove;
+        this.parent = parent;
 
         this.selectorElement.off("mousedown");
         this.selectorElement.on("mousedown", (event) => {
@@ -65,6 +66,7 @@ class Mover {
         });
 
         this.clearBorders();
+        this.arrangeNumbers();
     };
 
     selectAvailableSpaces (event) {
@@ -120,5 +122,25 @@ class Mover {
                 borderBottom: "none"
             })
         });
+    };
+
+    arrangeNumbers () {
+        this.bunch = $(this.selectorToMove);
+
+        this.bunch.each((i, item) => {
+            var shop = $(item).data("shop");
+            this.parent.list[shop].number = i+1;
+        });
+
+        Array.prototype.sort.call(this.parent.list, (a,b) => {
+            return a.number - b.number;
+        });
+
+        for (var i = this.parent.list.length-1; i > 0; i--) {
+            this.parent.list[i] = this.parent.list[i-1];
+        };
+        delete this.parent.list[0];
+
+        this.parent.render();
     }
 };
