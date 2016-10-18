@@ -174,6 +174,7 @@ class ShopList {
 		var nextRow = $(target.closest("tr"));
 		var shop = target.data("shop");
 		var commodity = new Commodity({name: "", description: ""});
+        this.list[shop].commodities = new List();
 		this.list[shop].commodities.add(commodity);
 		
 		var row = $("<tr></tr>");
