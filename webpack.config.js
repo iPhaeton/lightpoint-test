@@ -1,5 +1,6 @@
-const webpack = require("webpack");
 const NODE_ENV = process.env.NODE_ENV || "development";
+const webpack = require("webpack");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
     entry: {
@@ -31,7 +32,7 @@ module.exports = {
             },
             {
                 test:/\.css$/,
-                loader: "style!css!autoprefixer?browsers=last 2 versions"
+                loader: ExtractTextPlugin.extract("css!autoprefixer?browsers=last 2 versions")
             },
             //for bootstrap
             {test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff'},
@@ -44,6 +45,9 @@ module.exports = {
     plugins: [
         new webpack.ProvidePlugin({
             jQuery: "jquery"
+        }),
+        new ExtractTextPlugin('[name].css', {
+            allChunks: true
         }),
         new webpack.ProvidePlugin({
             $: "jquery"
