@@ -181,13 +181,18 @@ export default class ShopList {
 		var nextRow = $(target.closest("tr"));
 		var shop = target.data("shop");
 		var commodity = new Commodity({name: "", description: ""});
-        this.list[shop].commodities = new List();
+
+        if (!this.list[shop].commodities) {
+            this.list[shop].commodities = new List();
+        };
 		this.list[shop].commodities.add(commodity);
 		
 		var row = $("<tr></tr>");
 		row.append(this.editTable(commodity, shop));
 		nextRow.before(row);
-		
+
+        $(".edit-com").off("click")
+        $(".edit-com").on("click", this.editCommodity.bind(this));
 		$(".save-com").off("click");
 		$(".save-com").on("click", this.saveCommodity.bind(this));
 	}
