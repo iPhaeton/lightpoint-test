@@ -1,3 +1,8 @@
+import Shop from "./entities/shop.js";
+import Commodity from "./entities/commodity.js";
+import ShopList from "./shopList.js";
+import List from "./list.js";
+
 (function () {
     //Create a sample list
     var list = new List();

@@ -1,10 +1,7 @@
-//options = {
-//  address: address
-//  hours: working hours
-//  number: position in a list
-//}
+import Entity from "./entity.js";
+import List from "../list.js";
 
-class Shop extends Entity{
+export default class Shop extends Entity{
     constructor (options) {
         super(options.name, options.number);
         this.address = options.address;

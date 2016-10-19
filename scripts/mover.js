@@ -1,4 +1,4 @@
-class Mover {
+export default class Mover {
     constructor (selectorToCatch, selectorToMove, parent) {
         this.selectorElement = $(selectorToCatch);
         this.selectorToMove = selectorToMove;

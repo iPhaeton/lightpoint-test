@@ -1,6 +1,11 @@
+import Shop from "./entities/shop.js";
+import Commodity from "./entities/commodity.js";
+import List from "./list.js";
+import Mover from "./mover.js";
+
 //elem is implied to be a div and to be appended to a page
 
-class ShopList {
+export default class ShopList {
     constructor (elem, list) {
         if (!elem) {
             this.elem = $("<div></div>");
