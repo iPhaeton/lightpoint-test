@@ -3,10 +3,10 @@ import Commodity from "./entities/commodity.js";
 import ShopList from "./shopList.js";
 import List from "./list.js";
 
-import "../shop-list.css";
-
 import "bootstrap";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+
+import "../shop-list.css";
 
 (function () {
     //Create a sample list

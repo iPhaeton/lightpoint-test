@@ -32,6 +32,13 @@
 
 .panel-heading {
     padding: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.panel-heading a {
+    margin-right: 15px;
 }
 
 .panel-heading h3 {
