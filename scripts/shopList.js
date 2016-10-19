@@ -3,6 +3,8 @@ import Commodity from "./entities/commodity.js";
 import List from "./list.js";
 import Mover from "./mover.js";
 
+import "lodash";
+
 //elem is implied to be a div and to be appended to a page
 
 export default class ShopList {
