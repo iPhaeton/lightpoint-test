@@ -1,4 +1,5 @@
 const webpack = require("webpack");
+const NODE_ENV = process.env.NODE_ENV || "development";
 
 module.exports = {
     entry: {
@@ -10,9 +11,9 @@ module.exports = {
         filename: "[name].js"
     },
 
-    watch: true,
+    watch: NODE_ENV === "development",
 
-    devtool: "source-map",
+    devtool: NODE_ENV === "development" ? "source-map" : null,
 
     resolve: {
         modulesDirectories: ["node_modules"],
@@ -48,4 +49,16 @@ module.exports = {
             $: "jquery"
         })
     ]
+};
+
+if (NODE_ENV === "production") {
+    module.exports.plugins.push (
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false,
+                drop_console: true,
+                unsafe: true
+            }
+        })
+    )
 };
